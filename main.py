@@ -1,10 +1,11 @@
 import telebot
-import config
+
 
 from flask import Flask, request
 import os
 
-bot = telebot.TeleBot(config.TOKEN)
+TOKEN = os.environ.get('TOKEN')
+bot = telebot.TeleBot(TOKEN)
 
 app = Flask(__name__)
 
@@ -42,7 +43,7 @@ def courses_message(message):
     bot.send_message(message.chat.id, 'Доступные курсы:', reply_markup=keyboard)
 
 
-@app.route('/' + config.TOKEN, methods=['POST'])
+@app.route('/' + TOKEN, methods=['POST'])
 def get_message():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "Python Telegram Bot 29-05-2021", 200
@@ -51,7 +52,7 @@ def get_message():
 @app.route('/')
 def main():
     bot.remove_webhook()
-    bot.set_webhook(url='*' + config.TOKEN)
+    bot.set_webhook(url='https://aternum.herokuapp.com/' + TOKEN)
     return "Python Telegram Bot", 200
 
 
